@@ -15,7 +15,8 @@ int tolerance=1 {prompt="ccxymatch angular tolerance (arcsec)"}
 string pixmapfile="" {prompt="master coordinates file for pixel mapping"}
 bool interactive=yes {prompt="Interactive?  If no, just runs ccxymatch, ccmap, and wcsctran"}
 bool update=no       {prompt="Update the header of the input image file with ccmap?"}
-string input_coord_units="hours" {prompt="Units of the coordinates in the input catalog."}
+string lngunits="hours" {prompt="Units of the coordinates in the input catalog."}
+string latunits="degrees" {prompt="Units of the coordinates in the input catalog."}
 real xref,yref,lngref,latref,xmag,ymag
 
 begin
@@ -38,7 +39,11 @@ begin
     imgets(file,'CRPIX2')
     yref = imgets.value
     imgets(file,'CRVAL1')
-    lngref = real(imgets.value) / 15.
+    if (lngunits=="hours") {
+        lngref = real(imgets.value) / 15.
+    } else {
+        lngref = real(imgets.value)
+    }
     imgets(file,'CRVAL2')
     latref = imgets.value
     imgets(file,'CD1_1')
@@ -51,11 +56,12 @@ begin
     ccxymatch(prefix//"imexam.log", catalog, prefix//"match.txt", tolerance=tolerance, ptolerance=ptolerance,
                                     xrotation=0, yrotation=0,
             xin=xref, yin=yref, xmag=xmag, ymag=ymag, lngref=lngref, latref=latref, 
-            matching='tolerance')
+            matching='tolerance', lngunits=lngunits, latunits=latunits)
     ccmap(prefix//"match.txt", database=prefix//"match.db", images=file,
                                results=prefix//"ccmap.db", xcolumn=3,
-                               ycolumn=4, lngcolumn=1, latcolumn=2, update=update,
-                               interactive=interactive)
+                               ycolumn=4, lngcolumn=1, latcolumn=2,
+                               update=update, interactive=interactive,
+                               lngrefunits=lngunits, latrefunits=latunits)
     wcsctran(prefix//"ccmap.db",prefix//"pixpixmap.txt",pixmapfile,inwcs="world",outwcs="logical",
               columns="3 4 1 2 5 6 7 8", units="hours")
 
