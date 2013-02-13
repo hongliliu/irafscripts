@@ -1,12 +1,20 @@
+# Things that will be helpful:
+# This task needs to overwrite some files:
+# set clobber=yes
+# You also want to see the full frame when you display things:
+# set stdimage=imt2048
+
+# fit the coordinats in file "file", with output text files prefixed with "prefix", e.g.:
+# s69_1_ is the prefix for S20130131S0069.fits[1]
 procedure fit_coords(file, prefix) 
-string file="" {prompt="Input file"}
-string prefix="fc_" {prompt="Prefix for files"}
-string catalog="muench.txt" {prompt="Input catalog"}
-int ptolerance=20 {prompt="ccxymatch pixel tolerance"}
-int tolerance=1 {prompt="ccxymatch angular tolerance"}
+string file="" {prompt="Input image file"}
+string prefix="fc_" {prompt="Prefix for output files"}
+string catalog="muench.txt" {prompt="Input catalog (must have RA, Dec, then a label column)"}
+int ptolerance=20 {prompt="ccxymatch pixel tolerance (pixels)"}
+int tolerance=1 {prompt="ccxymatch angular tolerance (arcsec)"}
 string pixmapfile="" {prompt="master coordinates file for pixel mapping"}
-bool interactive=yes
-bool update=no
+bool interactive=yes {prompt="Interactive?  If no, just runs ccxymatch, ccmap, and wcsctran"}
+bool update=no       {prompt="Update the header of the input image file with ccmap?"}
 real xref,yref,lngref,latref,xmag,ymag
 
 begin
