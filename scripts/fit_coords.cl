@@ -25,7 +25,7 @@ begin
     }
 
     wcsctran(catalog, prefix//"transformed.txt", file, inwcs="world", outwcs="logical",
-                      columns="1 2 3", units=input_coords_units)
+                      columns="1 2 3", units=input_coord_units)
     if(interactive) {
         display(file, frame=1, zscale=no, ocolors='green', ztrans='log')
         tvmark(frame=1, coords=prefix//"transformed.txt", mark="circle", radii=20, lengths=3, color=205, label=yes, txsize=3)
