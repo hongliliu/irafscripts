@@ -15,6 +15,7 @@ int tolerance=1 {prompt="ccxymatch angular tolerance (arcsec)"}
 string pixmapfile="" {prompt="master coordinates file for pixel mapping"}
 bool interactive=yes {prompt="Interactive?  If no, just runs ccxymatch, ccmap, and wcsctran"}
 bool update=no       {prompt="Update the header of the input image file with ccmap?"}
+string input_coord_units="hours" {prompt="Units of the coordinates in the input catalog."}
 real xref,yref,lngref,latref,xmag,ymag
 
 begin
@@ -24,7 +25,7 @@ begin
     }
 
     wcsctran(catalog, prefix//"transformed.txt", file, inwcs="world", outwcs="logical",
-                      columns="1 2 3", units="hours")
+                      columns="1 2 3", units=input_coords_units)
     if(interactive) {
         display(file, frame=1, zscale=no, ocolors='green', ztrans='log')
         tvmark(frame=1, coords=prefix//"transformed.txt", mark="circle", radii=20, lengths=3, color=205, label=yes, txsize=3)
