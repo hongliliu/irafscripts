@@ -6,6 +6,7 @@ int ptolerance=20 {prompt="ccxymatch pixel tolerance"}
 int tolerance=1 {prompt="ccxymatch angular tolerance"}
 string pixmapfile="" {prompt="master coordinates file for pixel mapping"}
 bool interactive=yes
+bool update=no
 real xref,yref,lngref,latref,xmag,ymag
 
 begin
@@ -44,7 +45,7 @@ begin
             matching='tolerance')
     ccmap(prefix//"match.txt", database=prefix//"match.db", images=file,
                                results=prefix//"ccmap.db", xcolumn=3,
-                               ycolumn=4, lngcolumn=1, latcolumn=2, update=no,
+                               ycolumn=4, lngcolumn=1, latcolumn=2, update=update,
                                interactive=interactive)
     wcsctran(prefix//"ccmap.db",prefix//"pixpixmap.txt",pixmapfile,inwcs="world",outwcs="logical",
               columns="3 4 1 2 5 6 7 8", units="hours")
