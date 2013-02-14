@@ -16,7 +16,7 @@ pixel coordinate to "correct" pixel coordinate.  This is achieved with
 
 Once we have pixel->pixel solutions for multiple images, we concatenate them
 into a single file, then geomap to fit the solution.  e.g., for frame 2, I'd
-do:
+do::
 
     cat *_2_pixpixmap.txt > pixpix2_big.txt
     geomap pixpix2_big.txt pixpix2_big.db xmin=-4000 xmax=4000 ymin=-4000 ymax=4000 transforms=frame2
@@ -25,6 +25,6 @@ The tricky and hidden bit is that the coordinates are being mapped to the
 correct coordinates *in the pixel space of frame 1* (which is set by the
 `pixmapextens` keyword argument).
 
-Then (this part is untested) I assume you do something like:
+Then (this part is untested) I assume you do something like::
 
     geotran @files @files//trans pixpix2_big.db transforms=frame2
