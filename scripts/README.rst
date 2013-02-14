@@ -1,3 +1,13 @@
+Installation / Use
+==================
+The pure-iraf version (now deprecated)::
+
+    task fit_coords=/path/to/fit_coords.cl
+
+The python version (pyraf only)::
+
+    pyexecute("/path/to/fit_coords.py")
+
 How to Fit and Remove Distortion
 ================================
 fit_coords uses a catalog of known positions to determine the geometric
