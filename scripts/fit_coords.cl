@@ -18,11 +18,15 @@ bool update=no       {prompt="Update the header of the input image file with ccm
 string lngunits="hours" {prompt="Units of the coordinates in the input catalog."}
 string latunits="degrees" {prompt="Units of the coordinates in the input catalog."}
 real xref,yref,lngref,latref,xmag,ymag
+string pmf
 
 begin
 
     if (pixmapfile=="") {
-        pixmapfile=file
+        printf("Setting pixmapfile to %s\n",file)
+        pmf=file
+    } else {
+        pmf = pixmapfile
     }
 
     wcsctran(catalog, prefix//"transformed.txt", file, inwcs="world", outwcs="logical",
@@ -51,7 +55,7 @@ begin
     imgets(file,'CD2_2')
     ymag = real(imgets.value) * 3600
 
-    printf("%s %s %f %s %f %f",xref,yref,lngref,latref,xmag,ymag)
+    printf("%s %s %s %f %s %f %f\n",pmf,xref,yref,lngref,latref,xmag,ymag)
 
     ccxymatch(prefix//"imexam.log", catalog, prefix//"match.txt", tolerance=tolerance, ptolerance=ptolerance,
                                     xrotation=0, yrotation=0,
@@ -62,7 +66,7 @@ begin
                                ycolumn=4, lngcolumn=1, latcolumn=2,
                                update=update, interactive=interactive,
                                lngrefunits=lngunits, latrefunits=latunits)
-    wcsctran(prefix//"ccmap.db",prefix//"pixpixmap.txt",pixmapfile,inwcs="world",outwcs="logical",
+    wcsctran(prefix//"ccmap.db",prefix//"pixpixmap.txt",pmf,inwcs="world",outwcs="physical",
               columns="3 4 1 2 5 6 7 8", units="hours")
 
 end
