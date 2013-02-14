@@ -13,12 +13,14 @@ string catalog="muench.txt" {prompt="Input catalog (must have RA, Dec, then a la
 int ptolerance=20 {prompt="ccxymatch pixel tolerance (pixels)"}
 int tolerance=1 {prompt="ccxymatch angular tolerance (arcsec)"}
 string pixmapfile="" {prompt="master coordinates file for pixel mapping"}
+string pixmapextension="1" {prompt="Extension to use as reference for ccmap in pixmapfile"}
 bool interactive=yes {prompt="Interactive?  If no, just runs ccxymatch, ccmap, and wcsctran"}
 bool update=no       {prompt="Update the header of the input image file with ccmap?"}
 string lngunits="hours" {prompt="Units of the coordinates in the input catalog."}
 string latunits="degrees" {prompt="Units of the coordinates in the input catalog."}
 real xref,yref,lngref,latref,xmag,ymag
 string pmf
+# super useful reference: http://iraf.noao.edu/iraf/docs/script_intro.pdf
 
 begin
 
@@ -27,6 +29,9 @@ begin
         pmf=file
     } else {
         pmf = pixmapfile
+    }
+    if (stridx(pmf,"[")==0) {
+        pmf = pmf//"["//pixmapextension//"]"
     }
 
     wcsctran(catalog, prefix//"transformed.txt", file, inwcs="world", outwcs="logical",
