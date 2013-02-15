@@ -3,6 +3,7 @@
 import sys
 import os
 import re
+import math
 from pyraf import iraf 
 
 # Things that will be helpful:
@@ -50,17 +51,27 @@ def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
         lngref = float(iraf.images.imutil.imgets.value)
     iraf.images.imutil.imgets(file,'CRVAL2')
     latref = iraf.images.imutil.imgets.value
+
+    iraf.images.imutil.imgets(file,'CD2_1')
+    cd21 = float(iraf.images.imutil.imgets.value) * 3600
+    iraf.images.imutil.imgets(file,'CD1_2')
+    cd12 = float(iraf.images.imutil.imgets.value) * 3600
     iraf.images.imutil.imgets(file,'CD1_1')
-    xmag = float(iraf.images.imutil.imgets.value) * 3600
+    cd11 = float(iraf.images.imutil.imgets.value) * 3600
     iraf.images.imutil.imgets(file,'CD2_2')
-    ymag = float(iraf.images.imutil.imgets.value) * 3600
+    cd22 = float(iraf.images.imutil.imgets.value) * 3600
+
+    xmag = (cd11**2+cd12**2)**0.5
+    ymag = (cd22**2+cd21**2)**0.5
+    xrot = math.atan(cd12/cd11) *180/math.pi
+    yrot = math.atan(cd21/cd22) *180/math.pi
 
     if verbose:
-        print "File and header: ,%s %s %s %f %s %f %f" % (pmf,xref,yref,lngref,latref,xmag,ymag)
+        print "File and header: %s %s %s %f %s %f %f" % (pmf,xref,yref,lngref,latref,xmag,ymag)
 
     iraf.images.imcoords.ccxymatch(prefix+"imexam.log", catalog,
             prefix+"match.txt", tolerance=tolerance, ptolerance=ptolerance,
-            xrotation=0, yrotation=0, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
+            xrotation=xrot, yrotation=yrot, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
             lngref=lngref, latref=latref, matching='tolerance',
             lngunits=lngunits, latunits=latunits)
     iraf.images.imcoords.ccmap(prefix+"match.txt", database=prefix+"match.db", images=file,
