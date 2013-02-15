@@ -63,11 +63,12 @@ def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
 
     xmag = (cd11**2+cd12**2)**0.5
     ymag = (cd22**2+cd21**2)**0.5
-    xrot = math.atan2(cd12,cd11) *180/math.pi
-    yrot = math.atan2(cd21,cd22) *180/math.pi
+    xrot = math.atan2(cd21,cd11) *180/math.pi
+    yrot = math.atan2(cd12,cd22) *180/math.pi
 
     if verbose:
-        print "File and header: %s %s %s %f %s %f %f" % (pmf,xref,yref,lngref,latref,xmag,ymag)
+        print "CD: ",cd11,cd12,cd21,cd22
+        print "File and header: %s %s %s %f %s %f %f %f %f" % (pmf,xref,yref,lngref,latref,xmag,ymag,xrot,yrot)
 
     iraf.images.imcoords.ccxymatch(prefix+"imexam.log", catalog,
             prefix+"match.txt", tolerance=tolerance, ptolerance=ptolerance,
