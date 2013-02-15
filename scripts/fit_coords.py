@@ -63,8 +63,8 @@ def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
 
     xmag = (cd11**2+cd12**2)**0.5
     ymag = (cd22**2+cd21**2)**0.5
-    xrot = math.atan2(cd21,cd11) *180/math.pi
-    yrot = math.atan2(cd12,cd22) *180/math.pi
+    xrot = math.atan2(cd12,cd11) *180/math.pi
+    yrot = math.atan2(-cd21,cd22) *180/math.pi
 
     if verbose:
         print "CD: ",cd11,cd12,cd21,cd22
