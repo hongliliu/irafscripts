@@ -14,12 +14,12 @@ from pyraf import iraf
 
 # fit the coordinats in file "file", with output text files prefixed with "prefix", e.g.:
 # s69_1_ is the prefix for S20130131S0069.fits[1]
-def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
+def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         tolerance=1, pixmapfile="", pixmapextension="2", interactive=True,
         update=False, lngunits='hours', latunits='degrees', verbose=True):
 
     if (pixmapfile == ""):
-        pmf = file
+        pmf = infile
     else:
         pmf = pixmapfile
 
@@ -29,36 +29,36 @@ def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
     else:
         pmf = "%s[%s]" % (pmf, pixmapextension)
 
-    iraf.imcoords.wcsctran(catalog, prefix+"transformed.txt", file, inwcs="world", outwcs="logical",
+    iraf.imcoords.wcsctran(catalog, prefix+"transformed.txt", infile, inwcs="world", outwcs="logical",
                       columns="1 2 3", units=lngunits)
     if (interactive):
-        iraf.images.tv.display(file, frame=1, zscale=False, ocolors='green', ztrans='log')
+        iraf.images.tv.display(infile, frame=1, zscale=False, ocolors='green', ztrans='log')
         iraf.images.tv.tvmark(frame=1, coords=prefix+"transformed.txt",
                 mark="circle", radii=20, lengths=3, color=205, label=True,
                 txsize=3)
-        iraf.images.tv.imexam(file, logfile=prefix+"imexam.log", frame=1,
+        iraf.images.tv.imexam(infile, logfile=prefix+"imexam.log", frame=1,
                 wcs="world", xformat="%h", yformat="%H", keeplog=True,
                  display="display(image='$1', frame='1', zscale=no,ocolors='green',ztrans='log')")
 
-    iraf.images.imutil.imgets(file,'CRPIX1')
+    iraf.images.imutil.imgets(infile,'CRPIX1')
     xref = iraf.images.imutil.imgets.value
-    iraf.images.imutil.imgets(file,'CRPIX2')
+    iraf.images.imutil.imgets(infile,'CRPIX2')
     yref = iraf.images.imutil.imgets.value
-    iraf.images.imutil.imgets(file,'CRVAL1')
+    iraf.images.imutil.imgets(infile,'CRVAL1')
     if (lngunits=="hours"):
         lngref = float(iraf.images.imutil.imgets.value) / 15.
     else:
         lngref = float(iraf.images.imutil.imgets.value)
-    iraf.images.imutil.imgets(file,'CRVAL2')
+    iraf.images.imutil.imgets(infile,'CRVAL2')
     latref = iraf.images.imutil.imgets.value
 
-    iraf.images.imutil.imgets(file,'CD2_1')
+    iraf.images.imutil.imgets(infile,'CD2_1')
     cd21 = float(iraf.images.imutil.imgets.value) * 3600
-    iraf.images.imutil.imgets(file,'CD1_2')
+    iraf.images.imutil.imgets(infile,'CD1_2')
     cd12 = float(iraf.images.imutil.imgets.value) * 3600
-    iraf.images.imutil.imgets(file,'CD1_1')
+    iraf.images.imutil.imgets(infile,'CD1_1')
     cd11 = float(iraf.images.imutil.imgets.value) * 3600
-    iraf.images.imutil.imgets(file,'CD2_2')
+    iraf.images.imutil.imgets(infile,'CD2_2')
     cd22 = float(iraf.images.imutil.imgets.value) * 3600
 
     xmag = (cd11**2+cd12**2)**0.5
@@ -75,7 +75,7 @@ def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
             xrotation=xrot, yrotation=yrot, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
             lngref=lngref, latref=latref, matching='tolerance',
             lngunits=lngunits, latunits=latunits)
-    iraf.images.imcoords.ccmap(prefix+"match.txt", database=prefix+"match.db", images=file,
+    iraf.images.imcoords.ccmap(prefix+"match.txt", database=prefix+"match.db", images=infile,
                                results=prefix+"ccmap.db", xcolumn=3,
                                ycolumn=4, lngcolumn=1, latcolumn=2,
                                update=update, interactive=interactive,
