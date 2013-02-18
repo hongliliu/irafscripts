@@ -15,7 +15,7 @@ from pyraf import iraf
 # fit the coordinats in file "file", with output text files prefixed with "prefix", e.g.:
 # s69_1_ is the prefix for S20130131S0069.fits[1]
 def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
-        tolerance=1, pixmapfile="", pixmapextension="1", interactive=True,
+        tolerance=1, pixmapfile="", pixmapextension="2", interactive=True,
         update=False, lngunits='hours', latunits='degrees', verbose=True):
 
     if (pixmapfile == ""):
@@ -84,8 +84,19 @@ def fit_coords(file, prefix="fc_", catalog="muench.txt", ptolerance=20,
     if verbose:
         print "Aligning pixel coordinates to header of %s" % pmf
 
-    iraf.images.imcoords.wcsctran(prefix+"ccmap.db",prefix+"pixpixmap.txt",pmf,inwcs="world",outwcs="physical",
+    iraf.images.imcoords.wcsctran(prefix+"ccmap.db","tmp_"+prefix+"pixpixmap.txt",pmf,inwcs="world",outwcs="physical",
             columns="3 4 1 2 5 6 7 8", units="hours")
+    ppf = open(prefix+"pixpixmap.txt",'w')
+    for line in file("tmp_"+prefix+"pixpixmap.txt"):
+        if line[0] != "#":
+            data = line.strip().split()
+            if len(data)>=4:
+                data[1],data[2],data[3],data[4] = data[3],data[4],data[1],data[2]
+                ppf.write(" ".join(["%13s" % d for d in data]))
+                ppf.write("\n")
+        else:
+            ppf.write(line)
+    ppf.close()
 
 curpath = os.path.dirname( os.path.abspath(__file__) )
 parfile = iraf.osfn(curpath+"/fit_coords.par") 
