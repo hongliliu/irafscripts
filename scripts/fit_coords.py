@@ -91,12 +91,13 @@ def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         if line[0] != "#":
             data = line.strip().split()
             if len(data)>=4:
-                data[1],data[2],data[3],data[4] = data[3],data[4],data[1],data[2]
+                data[0],data[1],data[2],data[3] = data[2],data[3],data[0],data[1]
                 ppf.write(" ".join(["%13s" % d for d in data]))
                 ppf.write("\n")
         else:
             ppf.write(line)
     ppf.close()
+    os.remove("tmp_"+prefix+"pixpixmap.txt")
 
 curpath = os.path.dirname( os.path.abspath(__file__) )
 parfile = iraf.osfn(curpath+"/fit_coords.par") 
