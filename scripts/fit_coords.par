@@ -9,4 +9,6 @@ interactive,b,h,yes,,,"Interactive?  If no, just runs ccxymatch, ccmap, and wcsc
 update,b,h,no,,,"Update the header of the input image file with ccmap?"
 lngunits,s,h,"hours",,,"Units of the coordinates in the input catalog."
 latunits,s,h,"degrees",,,"Units of the coordinates in the input catalog."
+refra,f,h, ,,,"Reference RA"
+refdec,f,h, ,,,"Reference Dec"
 verbose,b,h,yes,,,"Print lots of things"

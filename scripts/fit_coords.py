@@ -89,10 +89,10 @@ def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         iraf.stsdas.toolbox.imgtools.rd2xy(pmf,refra,refdec,hour=False) 
         x = iraf.stsdas.toolbox.imgtools.rd2xy.x
         y = iraf.stsdas.toolbox.imgtools.rd2xy.y
-        images.imutil.hedit(pmf,fields="CRPIX1",value=x,verify=False)
-        images.imutil.hedit(pmf,fields="CRPIX2",value=y,verify=False)
-        images.imutil.hedit(pmf,fields="CRVAL1",value=refra,verify=False)
-        images.imutil.hedit(pmf,fields="CRVAL2",value=refdec,verify=False)
+        iraf.images.imutil.hedit(pmf,fields="CRPIX1",value=x,verify=False)
+        iraf.images.imutil.hedit(pmf,fields="CRPIX2",value=y,verify=False)
+        iraf.images.imutil.hedit(pmf,fields="CRVAL1",value=refra,verify=False)
+        iraf.images.imutil.hedit(pmf,fields="CRVAL2",value=refdec,verify=False)
         print "x,y %f,%f to ra,dec %f,%f" % (x,y,refra,refdec)
 
     iraf.images.imcoords.wcsctran(prefix+"ccmap.db",
