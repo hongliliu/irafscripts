@@ -16,7 +16,8 @@ from pyraf import iraf
 # s69_1_ is the prefix for S20130131S0069.fits[1]
 def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         tolerance=1, pixmapfile="", pixmapextension="2", interactive=True,
-        update=False, lngunits='hours', latunits='degrees', verbose=True):
+        update=False, lngunits='hours', latunits='degrees', verbose=True,
+        refra=None, refdec=None):
 
     if (pixmapfile == ""):
         pmf = infile
@@ -84,8 +85,19 @@ def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
     if verbose:
         print "Aligning pixel coordinates to header of %s" % pmf
 
-    iraf.images.imcoords.wcsctran(prefix+"ccmap.db","tmp_"+prefix+"pixpixmap.txt",pmf,inwcs="world",outwcs="physical",
-            columns="3 4 1 2 5 6 7 8", units="hours")
+    if refra is not None and refdec is not None:
+        iraf.stsdas.toolbox.imgtools.rd2xy(pmf,refra,refdec,hour=False) 
+        x = iraf.stsdas.toolbox.imgtools.rd2xy.x
+        y = iraf.stsdas.toolbox.imgtools.rd2xy.y
+        images.imutil.hedit(pmf,fields="CRPIX1",value=x,verify=False)
+        images.imutil.hedit(pmf,fields="CRPIX2",value=y,verify=False)
+        images.imutil.hedit(pmf,fields="CRVAL1",value=refra,verify=False)
+        images.imutil.hedit(pmf,fields="CRVAL2",value=refdec,verify=False)
+        print "x,y %f,%f to ra,dec %f,%f" % (x,y,refra,refdec)
+
+    iraf.images.imcoords.wcsctran(prefix+"ccmap.db",
+            "tmp_"+prefix+"pixpixmap.txt", pmf, inwcs="world",
+            outwcs="physical", columns="3 4 1 2 5 6 7 8", units="hours")
     ppf = open(prefix+"pixpixmap.txt",'w')
     for line in file("tmp_"+prefix+"pixpixmap.txt"):
         if line[0] != "#":
