@@ -9,9 +9,9 @@ import ccxymatch_ref
 import numpy as np
 
 def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
-        threshold=15, datamax=30000, fwhm=4, roundlo=-0.8, roundhi=0.8,
-        sharphi=0.5, interactive=True, lngunits='hours', latunits='degrees',
-        update=False, **kwargs):
+        threshold=15, datamax=90000, fwhm=4, roundlo=-0.5, roundhi=0.5,
+        sharplo=0.2, sharphi=0.5, interactive=True, lngunits='hours',
+        latunits='degrees', update=False, **kwargs):
     # these unfortunately bring up menus...
     # iraf.noao.digiphot.apphot.findpars(threshold=10,)
     # iraf.noao.digiphot.apphot.datapars(scale=1, fwhmpsf=2.5, sigma=50,
@@ -24,6 +24,7 @@ def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
     iraf.noao.digiphot.apphot.findpars.roundlo = roundlo
     iraf.noao.digiphot.apphot.findpars.roundhi = roundhi
     iraf.noao.digiphot.apphot.findpars.sharphi = sharphi
+    iraf.noao.digiphot.apphot.findpars.sharplo = sharplo
     iraf.noao.digiphot.apphot.daofind(image, output=outprefix+".coo",
             starmap=outprefix+".star", skymap=outprefix+".sky",
             verify=False, update=False, verbose=True, interactive=False)
@@ -32,8 +33,9 @@ def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
 
     pixcoords = np.loadtxt(outprefix+".coo",usecols=[0,1])
     with open(outprefix+"_pix.reg",'w') as f:
+        print >>f,"image"
         for x,y in pixcoords:
-            print >>f,"point(%f,%f) # point=+ color=cyan" % (x,y)
+            print >>f,"point(%f,%f) # point=cross color=cyan" % (x,y)
 
     iraf.images.imcoords.ccmap(outprefix+"_match.txt", database=outprefix+"_match.db",
             images=image, results=outprefix+"_ccmap.db", xcolumn=3, ycolumn=4,
@@ -42,6 +44,7 @@ def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
 
     pixcoords_match = np.loadtxt(outprefix+"_match.txt",usecols=[2,3])
     with open(outprefix+"_matchpix.reg",'w') as f:
+        print >>f,"image"
         for x,y in pixcoords_match:
             print >>f,"point(%f,%f) # point=x color=red" % (x,y)
 
