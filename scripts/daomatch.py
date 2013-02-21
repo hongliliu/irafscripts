@@ -29,7 +29,18 @@ def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
     ccxymatch_ref.ccxymatch_ref(image, outprefix+".coo", wcscatalog,
             prefix=outprefix+"_", **kwargs)
 
+    pixcoords = np.loadtxt(outprefix+".coo",usecols=[0,1])
+    with open(outprefix+"_pix.reg",'w') as f:
+        for x,y in pixcoords:
+            print >>f,"point(%f,%f) # point=+ color=cyan" % (x,y)
+
     iraf.images.imcoords.ccmap(outprefix+"_match.txt", database=outprefix+"_match.db",
             images=image, results=outprefix+"_ccmap.db", xcolumn=3, ycolumn=4,
             lngcolumn=1, latcolumn=2, update=update, interactive=interactive,
             lngrefunits=lngunits, latrefunits=latunits)
+
+    pixcoords_match = np.loadtxt(outprefix+"_match.txt",usecols=[2,3])
+    with open(outprefix+"_matchpix.reg",'w') as f:
+        for x,y in pixcoords_match:
+            print >>f,"point(%f,%f) # point=x color=red" % (x,y)
+
