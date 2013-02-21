@@ -10,7 +10,7 @@ import ccxymatch_ref
 def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
         threshold=15, datamax=30000, fwhm=4, roundlo=-0.8, roundhi=0.8,
         sharphi=0.5, interactive=True, lngunits='hours', latunits='degrees',
-        **kwargs):
+        update=False, **kwargs):
     # these unfortunately bring up menus...
     # iraf.noao.digiphot.apphot.findpars(threshold=10,)
     # iraf.noao.digiphot.apphot.datapars(scale=1, fwhmpsf=2.5, sigma=50,
