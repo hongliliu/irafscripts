@@ -13,5 +13,5 @@ def daomatch(image, outprefix, wcscatalog, **kwargs):
             datamin=300, datamax=30000)
     iraf.noao.digiphot.apphot.daofind(image, output=outprefix+".coo",
             starmap=outprefix+".star", skymap=outprefix+".sky",
-            verify=False, update=False, verbose=True)
+            verify=False, update=False, verbose=True, interactive=False)
     ccxymatch_ref.ccxymatch_ref(image, outprefix+".coo", wcscatalog, **kwargs)
