@@ -16,7 +16,7 @@ from pyraf import iraf
 # s69_1_ is the prefix for S20130131S0069.fits[1]
 def ccxymatch_ref(reffile, pixcoordfile, wcscoordfile, prefix="fc_",
         ptolerance=20, tolerance=1, lngunits='hours', latunits='degrees',
-        verbose=True,):
+        verbose=True, doccmap=False, update=False):
 
     iraf.images.imutil.imgets(reffile,'CRPIX1')
     xref = iraf.images.imutil.imgets.value
@@ -53,6 +53,12 @@ def ccxymatch_ref(reffile, pixcoordfile, wcscoordfile, prefix="fc_",
             xrotation=xrot, yrotation=yrot, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
             lngref=lngref, latref=latref, matching='tolerance',
             lngunits=lngunits, latunits=latunits)
+    
+    if doccmap:
+        iraf.images.imcoords.ccmap(prefix+"match.txt", database=prefix+"match.db",
+                images=reffile, results=prefix+"ccmap.db", xcolumn=3, ycolumn=4,
+                lngcolumn=1, latcolumn=2, update=update, interactive=doccmap,
+                lngrefunits=lngunits, latrefunits=latunits)
 
 curpath = os.path.dirname( os.path.abspath(__file__) )
 parfile = iraf.osfn(curpath+"/ccxymatch_ref.par") 
