@@ -8,8 +8,8 @@ from pyraf import iraf
 import ccxymatch_ref
 import numpy as np
 
-def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
-        threshold=15, datamax=90000, fwhm=4, roundlo=-0.5, roundhi=0.5,
+def daomatch(image, outprefix, wcscatalog, noiselevel=50, datamin=300,
+        threshold=25, datamax=90000, fwhm=4, roundlo=-0.5, roundhi=0.5,
         sharplo=0.2, sharphi=0.5, interactive=True, lngunits='hours',
         latunits='degrees', update=False, **kwargs):
     # these unfortunately bring up menus...
