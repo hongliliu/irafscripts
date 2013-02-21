@@ -6,6 +6,7 @@ import re
 import math
 from pyraf import iraf 
 import ccxymatch_ref
+import numpy as np
 
 def daomatch(image, outprefix, wcscatalog, noiselevel=10, datamin=300,
         threshold=15, datamax=30000, fwhm=4, roundlo=-0.8, roundhi=0.8,
