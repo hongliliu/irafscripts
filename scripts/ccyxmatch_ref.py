@@ -14,30 +14,29 @@ from pyraf import iraf
 
 # fit the coordinats in file "file", with output text files prefixed with "prefix", e.g.:
 # s69_1_ is the prefix for S20130131S0069.fits[1]
-def ccxymatch_ref(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
-        tolerance=1, 
-        lngunits='hours', latunits='degrees', verbose=True,
-        ):
+def ccxymatch_ref(reffile, pixcoordfile, wcscoordfile, prefix="fc_",
+        ptolerance=20, tolerance=1, lngunits='hours', latunits='degrees',
+        verbose=True,):
 
-    iraf.images.imutil.imgets(infile,'CRPIX1')
+    iraf.images.imutil.imgets(reffile,'CRPIX1')
     xref = iraf.images.imutil.imgets.value
-    iraf.images.imutil.imgets(infile,'CRPIX2')
+    iraf.images.imutil.imgets(reffile,'CRPIX2')
     yref = iraf.images.imutil.imgets.value
-    iraf.images.imutil.imgets(infile,'CRVAL1')
+    iraf.images.imutil.imgets(reffile,'CRVAL1')
     if (lngunits=="hours"):
         lngref = float(iraf.images.imutil.imgets.value) / 15.
     else:
         lngref = float(iraf.images.imutil.imgets.value)
-    iraf.images.imutil.imgets(infile,'CRVAL2')
+    iraf.images.imutil.imgets(reffile,'CRVAL2')
     latref = iraf.images.imutil.imgets.value
 
-    iraf.images.imutil.imgets(infile,'CD2_1')
+    iraf.images.imutil.imgets(reffile,'CD2_1')
     cd21 = float(iraf.images.imutil.imgets.value) * 3600
-    iraf.images.imutil.imgets(infile,'CD1_2')
+    iraf.images.imutil.imgets(reffile,'CD1_2')
     cd12 = float(iraf.images.imutil.imgets.value) * 3600
-    iraf.images.imutil.imgets(infile,'CD1_1')
+    iraf.images.imutil.imgets(reffile,'CD1_1')
     cd11 = float(iraf.images.imutil.imgets.value) * 3600
-    iraf.images.imutil.imgets(infile,'CD2_2')
+    iraf.images.imutil.imgets(reffile,'CD2_2')
     cd22 = float(iraf.images.imutil.imgets.value) * 3600
 
     xmag = (cd11**2+cd12**2)**0.5
@@ -49,7 +48,7 @@ def ccxymatch_ref(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         print "CD: ",cd11,cd12,cd21,cd22
         print "File and header: %s %s %f %s %f %f %f %f" % (xref,yref,lngref,latref,xmag,ymag,xrot,yrot)
 
-    iraf.images.imcoords.ccxymatch(prefix+"imexam.log", catalog,
+    iraf.images.imcoords.ccxymatch(pixcoordfile, wcscoordfile,
             prefix+"match.txt", tolerance=tolerance, ptolerance=ptolerance,
             xrotation=xrot, yrotation=yrot, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
             lngref=lngref, latref=latref, matching='tolerance',
