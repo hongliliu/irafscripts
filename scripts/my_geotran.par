@@ -1,0 +1,3 @@
+
+input_file,s,a,"",,,"Input image file"
+output_file,s,a,"",,,"Output image file"
