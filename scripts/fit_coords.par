@@ -1,4 +1,4 @@
-file,s,a,"",,,"Input image file"
+infile,s,a,"",,,"Input image file"
 prefix,s,a,"fc_" ,,,"Prefix for output files"
 catalog,s,h,"muench.txt" ,,,"Input catalog (must have RA, Dec, then a label column)"
 ptolerance,i,h,20 ,,,"ccxymatch pixel tolerance (pixels)"
