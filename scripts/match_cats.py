@@ -82,21 +82,27 @@ def xymatch(x1, y1, x2, y2, tol=None, nnearest=1):
 
 
 def match_cats(cat1, cat2, tol=5, colscat1=[0,1], colscat2=[0,1], savetxt=None,
-        extracolcat=None, extracolcatcols=[0,1]):
-    x1,y1 = np.loadtxt(cat1,usecols=colscat1)
-    x2,y2 = np.loadtxt(cat2,usecols=colscat2)
+        extracolcat=None, extracolcatcols=[0,1], verbose=True):
+    x1,y1 = np.loadtxt(cat1,usecols=colscat1).T
+    x2,y2 = np.loadtxt(cat2,usecols=colscat2).T
     inds1,inds2,dist = xymatch(x1,y1,x2,y2,tol)
 
     if extracolcat is not None:
-        x3,y3 = np.loadtxt(extracolcat,usecols=extracolcatcols,dtype=str)
+        x3,y3 = np.loadtxt(extracolcat,usecols=extracolcatcols,dtype=str).T
+
+        if verbose:
+            print "Size of catalogs. 1: %i  2: %i  extra: %i" % (len(x1),len(x2),len(x3))
     
     if savetxt is not None:
-        with f as open(savetxt,'w'):
+        with open(savetxt,'w') as f:
             for i1,i2 in zip(inds1,inds2):
-                outstuff = ["%10f" % x for x in (x1[i1],y1[i1],x2[i2],y2[i2])]
+                outstuff = ["%15.3f" % x for x in (x1[i1],y1[i1],x2[i2],y2[i2])]
                 if extracolcat is not None:
-                    outstuff = outstuff + ["%10s" % x for x in(x3[i1],x3[i2])]
+                    outstuff = outstuff + ["%15s" % x for x in(x3[i2],y3[i2])]
                 print >>f," ".join(outstuff)
+
+    if verbose:
+        print "Found %i matches with tolerance %i" % (len(inds1), tol)
 
     return inds1,inds2,dist
 
