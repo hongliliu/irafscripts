@@ -1,4 +1,4 @@
 file1,s,a,"",,,"Input image file"
 file2,s,a,"",,,"Output image file to transfer header to"
-extensions,s,a,"1,2,3,4" ,,,"Extensions"
+extensions,s,h,"1,2,3,4" ,,,"Extensions"
 

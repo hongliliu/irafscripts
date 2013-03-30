@@ -16,8 +16,9 @@ from pyraf import iraf
 # s69_1_ is the prefix for S20130131S0069.fits[1]
 def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         tolerance=1, pixmapfile="", pixmapextension="2", interactive=True,
-        update=False, lngunits='hours', latunits='degrees', verbose=True,
-        refra=None, refdec=None):
+        update=False, lngunits='hours', latunits='degrees', 
+        refra=None, refdec=None, verbose=True,):
+    """ Note that order in fit_coords.par matters """
 
     if (pixmapfile == ""):
         pmf = infile
