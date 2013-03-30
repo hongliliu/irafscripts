@@ -83,6 +83,9 @@ def xymatch(x1, y1, x2, y2, tol=None, nnearest=1):
 
 def match_cats(cat1, cat2, tol=5, colscat1=[0,1], colscat2=[0,1], savetxt=None,
         extracolcat=None, extracolcatcols=[0,1], verbose=True):
+    """
+    Extracolcat is indexed as cat2
+    """
     x1,y1 = np.loadtxt(cat1,usecols=colscat1).T
     x2,y2 = np.loadtxt(cat2,usecols=colscat2).T
     inds1,inds2,dist = xymatch(x1,y1,x2,y2,tol)
