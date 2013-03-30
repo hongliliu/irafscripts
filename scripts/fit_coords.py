@@ -74,12 +74,8 @@ def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         print "File and header: %s %s %s %f %s %f %f %f %f" % (pmf,xref,yref,lngref,latref,xmag,ymag,xrot,yrot)
     
     inds1,inds2,dist = match_cats.match_cats(prefix+"imexam.log",
-        prefix+"transformed.txt", tol=tolerance)
-    #iraf.images.imcoords.ccxymatch(prefix+"imexam.log", catalog,
-    #        prefix+"match.txt", tolerance=tolerance, ptolerance=ptolerance,
-    #        xrotation=xrot, yrotation=yrot, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
-    #        lngref=lngref, latref=latref, matching='tolerance',
-    #        lngunits=lngunits, latunits=latunits)
+        prefix+"transformed.txt", tol=tolerance, savetxt=prefix+"match.txt",
+        extracolcat=catalog)
     iraf.images.imcoords.ccmap(prefix+"match.txt", database=prefix+"match.db", images=infile,
                                results=prefix+"ccmap.db", xcolumn=3,
                                ycolumn=4, lngcolumn=1, latcolumn=2,

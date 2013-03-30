@@ -81,7 +81,23 @@ def xymatch(x1, y1, x2, y2, tol=None, nnearest=1):
     return idxs1, idxs2, ds
 
 
-def match_cats(cat1, cat2, tol=5, colscat1=[0,1], colscat2=[0,1]):
+def match_cats(cat1, cat2, tol=5, colscat1=[0,1], colscat2=[0,1], savetxt=None,
+        extracolcat=None, extracolcatcols=[0,1]):
     x1,y1 = np.loadtxt(cat1,usecols=colscat1)
     x2,y2 = np.loadtxt(cat2,usecols=colscat2)
-    return xymatch(x1,y1,x2,y2,tol)
+    inds1,inds2,dist = xymatch(x1,y1,x2,y2,tol)
+
+    if extracolcat is not None:
+        x3,y3 = np.loadtxt(extracolcat,usecols=extracolcatcols,dtype=str)
+    
+    if savetxt is not None:
+        with f as open(savetxt,'w'):
+            for i1,i2 in zip(inds1,inds2):
+                outstuff = ["%10f" % x for x in (x1[i1],y1[i1],x2[i2],y2[i2])]
+                if extracolcat is not None:
+                    outstuff = outstuff + ["%10s" % x for x in(x3[i1],x3[i2])]
+                print >>f," ".join(outstuff)
+
+    return inds1,inds2,dist
+
+
