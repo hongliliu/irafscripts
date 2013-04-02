@@ -18,8 +18,10 @@ def wcs_transfer(file1,file2,extensions="1,2,3,4"):
 
     for ext in extensions:
         for kw in WCS_keywords:
+            #print file1,file2,ext,kw,
             iraf.images.imutil.imgets(template % (file1,ext),kw)
             var = iraf.images.imutil.imgets.value
+            #print var
             if var != '0':
                 iraf.hedit(template % (file2,ext), fields=kw, value=var,
                         add=True, verify=False, update=True, show=True)
