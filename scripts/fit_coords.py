@@ -5,6 +5,7 @@ import os
 import re
 import math
 from pyraf import iraf 
+import match_cats
 
 # Things that will be helpful:
 # This task needs to overwrite some files:
@@ -16,8 +17,9 @@ from pyraf import iraf
 # s69_1_ is the prefix for S20130131S0069.fits[1]
 def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
         tolerance=1, pixmapfile="", pixmapextension="2", interactive=True,
-        update=False, lngunits='hours', latunits='degrees', verbose=True,
-        refra=None, refdec=None):
+        update=False, lngunits='hours', latunits='degrees', 
+        refra=None, refdec=None, verbose=True,):
+    """ Note that order in fit_coords.par matters """
 
     if (pixmapfile == ""):
         pmf = infile
@@ -70,16 +72,15 @@ def fit_coords(infile, prefix="fc_", catalog="muench.txt", ptolerance=20,
     if verbose:
         print "CD: ",cd11,cd12,cd21,cd22
         print "File and header: %s %s %s %f %s %f %f %f %f" % (pmf,xref,yref,lngref,latref,xmag,ymag,xrot,yrot)
-
-    iraf.images.imcoords.ccxymatch(prefix+"imexam.log", catalog,
-            prefix+"match.txt", tolerance=tolerance, ptolerance=ptolerance,
-            xrotation=xrot, yrotation=yrot, xin=xref, yin=yref, xmag=xmag, ymag=ymag,
-            lngref=lngref, latref=latref, matching='tolerance',
-            lngunits=lngunits, latunits=latunits)
+    
+    inds1,inds2,dist = match_cats.match_cats(prefix+"imexam.log",
+        prefix+"transformed.txt", tol=ptolerance, savetxt=prefix+"match.txt",
+        extracolcat=catalog)
     iraf.images.imcoords.ccmap(prefix+"match.txt", database=prefix+"match.db", images=infile,
-                               results=prefix+"ccmap.db", xcolumn=3,
-                               ycolumn=4, lngcolumn=1, latcolumn=2,
+                               results=prefix+"ccmap.db", xcolumn=1,
+                               ycolumn=2, lngcolumn=5, latcolumn=6,
                                update=update, interactive=interactive,
+                               lngunits=lngunits, latunits=latunits,
                                lngrefunits=lngunits, latrefunits=latunits)
 
     if verbose:
